@@ -1,6 +1,5 @@
 <<<<<<< HEAD
-node_modules
-node_modules
+
 =======
 
 >>>>>>> 568e1b7 (second commit)
@@ -8,7 +7,7 @@ node_modules
 
 build
 dist
-node_modules
+
 .DS_Store
 .idea
 sassdoc
@@ -24,7 +23,7 @@ src/assets/sass/theme/_vendor_extensions
 /out-tsc
 
 # dependencies
-/node_modules
+
 
 # profiling files
 chrome-profiler-events.json
