@@ -1,0 +1,18 @@
+<div class="layout-sidebar">
+    <div class="layout-sidebar-top">
+        <a href="/">
+            <svg width="167" height="32" viewBox="0 0 167 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="layout-sidebar-logo">
+
+            </svg>
+            <svg width="41" height="32" viewBox="0 0 41 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="layout-sidebar-logo-slim">
+
+            </svg>
+        </a>
+        <button class="layout-sidebar-anchor p-link" type="button" (click)="anchor()"></button>
+    </div>
+    <app-menu-profile #menuProfileStart *ngIf="menuProfilePosition === 'start'"></app-menu-profile>
+    <div #menuContainer class="layout-menu-container">
+        <app-menu></app-menu>
+    </div>
+    <app-menu-profile #menuProfileEnd *ngIf="menuProfilePosition === 'end'"></app-menu-profile>
+</div>

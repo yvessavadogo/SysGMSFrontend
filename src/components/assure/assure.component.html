@@ -1,0 +1,42 @@
+<style>
+    .horizontal-buttons {
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+<p-table
+    [value]="assures"
+    [paginator]="true"
+    [rows]="10"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    [globalFilterFields]="['code', 'annee', 'isActived']" responsiveLayout="scroll">
+
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:25%">Nom</th>
+            <th style="width:25%">prenom</th>
+            <th style="width:25%">Genre</th>
+            <th style="width:25%">Status</th>
+            <th style="width:25%">Action</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-assure>
+        <tr>
+            <td>{{ assure.nomAssure }}</td>
+            <td>{{ assure.prenomAssure }}</td>
+            <td>{{ assure.sexeAssure }}</td>
+            <td>{{ assure.statutAssure }}</td>
+            <td>
+                <div class="horizontal-buttons">
+
+                    <button pButton pRipple type="button" (click)="onDisplayDialogue(assure)" icon="pi pi-user" class="p-button mr-2"></button>
+                    <button pButton pRipple type="button" (click)="onDisplayDialogue(assure)" icon="pi pi-pencil" class="p-button-success mr-2"></button>
+                    <button pButton pRipple type="button" icon="pi pi-trash" (click)="onDeleteAssure(assure)" class="p-button-danger mr-2"></button>
+
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

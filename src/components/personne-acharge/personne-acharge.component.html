@@ -1,0 +1,256 @@
+<style>
+    .horizontal-buttons {
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+
+<p-table
+#dt1
+    [value]="personneAcharges"
+    [paginator]="true"
+    [rows]="10"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    [globalFilterFields]="['code', 'annee', 'isActived']" responsiveLayout="scroll">
+
+    <ng-template pTemplate="caption">
+
+    </ng-template>
+
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:25%">Nom</th>
+            <th style="width:25%">dateNaiss</th>
+            <th style="width:25%">Genre</th>
+            <th style="width:25%">Status</th>
+            <th style="width:25%">Action</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-personneAcharge>
+        <tr>
+            <td>{{ personneAcharge.nomAssure }}</td>
+            <td>{{ personneAcharge.prenomAssure }}</td>
+            <td>{{ personneAcharge.sexeAssure }}</td>
+            <td>{{ personneAcharge.statutAssure}}</td>
+
+          <div class="horizontal-buttons">
+
+              <button pButton pRipple type="button" (click)="onDisplayDialogue(personneAcharge)" icon="pi pi-user" class="p-button mr-2"></button>
+              <button pButton pRipple type="button" icon="pi pi-info-circle"  class="p-button-info mr-2"></button>
+              <button pButton pRipple type="button" (click)="onDisplayDialogue(personneAcharge)" icon="pi pi-pencil" class="p-button-success mr-2"></button>
+              <button pButton pRipple type="button" icon="pi pi-trash" (click)="onDeletePersonneAcharge(personneAcharge)" class="p-button-danger mr-2"></button>
+
+
+          </div>
+
+
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog header="ENREGISTREMENT D'UNE PERSONNE EN CHARGE" [(visible)]="displayDialogue" [style]="{width: '70vw'}">
+    <div>
+        <form  #myForm="ngForm" name="myForm" role="form" novalidate>
+            <div class="form-columns flex flex-row gap-2">
+
+                <div class="form-column flex-grow-1">
+                    <div class="flex flex-column gap-2">
+                    <label htmlFor="nomAssure">Nom</label>
+                    <input pInputText id="nomAssure" type="text" name="nomAssure" [(ngModel)]="personneAcharge.nomAssure" #nomAssure="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : nomAssure.touched && !nomAssure.valid}"
+                    />
+                    <span *ngIf="nomAssure.invalid && (nomAssure.dirty || nomAssure.touched)">
+                <span *ngIf="nomAssure.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="nomAssure.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+
+              <label htmlFor="prenom">Prénom </label>
+              <input pInputText id="prenom" type="text" name="prenom" [(ngModel)]="personneAcharge.prenomAssure" #prenom="ngModel"
+                     required minlength="1"
+                     [ngClass] ="{'ng-invalid ng-dirty' : prenom.touched && !prenom.valid}"/>
+              <span *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)">
+          <span *ngIf="prenom.errors?.['required']">
+            <small class="ng-invalid ng-dirty">Le code est requis</small>
+          </span>
+          <span *ngIf="prenom.errors?.['minlength']">
+            <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+          </span>
+        </span>
+    </div>
+</div>
+</div>
+
+
+
+<div class="form-columns flex flex-row gap-2">
+
+    <div class="form-column flex-grow-1">
+        <div class="flex flex-column gap-2">
+                    <label htmlFor="dateNaiss">Date de Naissance </label>
+                    <input pInputText id="dateNaiss" type="text" name="dateNaiss" [(ngModel)]="personneAcharge.dateNaissanceAssure" #dateNaiss="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : dateNaiss.touched && !dateNaiss.valid}"
+                    />
+                    <span *ngIf="dateNaiss.invalid && (dateNaiss.dirty || dateNaiss.touched)">
+                <span *ngIf="dateNaiss.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="dateNaiss.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                    <label htmlFor="sexe">Sexe</label>
+                    <input pInputText id="sexe" type="text" name="sexe" [(ngModel)]="personneAcharge.sexeAssure" #sexe="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : sexe.touched && !sexe.valid}"
+                    />
+                    <span *ngIf="sexe.invalid && (sexe.dirty || sexe.touched)">
+                <span *ngIf="sexe.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="sexe.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+                </div>
+
+
+<div class="form-columns flex flex-row gap-2">
+
+    <div class="form-column flex-grow-1">
+        <div class="flex flex-column gap-2">
+                    <label htmlFor="tel">Telephone</label>
+                    <input pInputText id="tel" type="text" name="tel" [(ngModel)]="personneAcharge.telephoneAssure" #tel="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : tel.touched && !tel.valid}"
+                    />
+                    <span *ngIf="tel.invalid && (tel.dirty || tel.touched)">
+                <span *ngIf="tel.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="tel.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+                </div>
+            </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                    <label htmlFor="adress">Adresse</label>
+                    <input pInputText id="adress" type="text" name="adress" [(ngModel)]="personneAcharge.adresseAssure" #adress="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : adress.touched && !adress.valid}"
+                    />
+                    <span *ngIf="adress.invalid && (adress.dirty || adress.touched)">
+                <span *ngIf="adress.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="adress.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+        </div>
+
+
+
+        <div class="form-columns flex flex-row gap-2">
+
+            <div class="form-column flex-grow-1">
+                <div class="flex flex-column gap-2">
+                    <label htmlFor="Status">Statut</label>
+                    <input pInputText id="Status" type="text" name="Status" [(ngModel)]="personneAcharge.statutAssure" #Status="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : Status.touched && !Status.valid}"
+                    />
+                    <span *ngIf="Status.invalid && (Status.dirty || Status.touched)">
+                <span *ngIf="Status.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="Status.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                <label htmlFor="affiliationPAC">Affiliation PAC</label>
+                <input pInputText id="affiliationPAC" type="text" name="affiliationPAC" [(ngModel)]="personneAcharge.affiliationPAC" #affiliationPAC="ngModel"
+                       required minlength="1"
+                       [ngClass] ="{'ng-invalid ng-dirty' : affiliationPAC.touched && !affiliationPAC.valid}"
+                />
+                <span *ngIf="affiliationPAC.invalid && (affiliationPAC.dirty || affiliationPAC.touched)">
+            <span *ngIf="affiliationPAC.errors?.['required']">
+              <small class="ng-invalid ng-dirty">Le code est requis</small>
+            </span>
+            <span *ngIf="affiliationPAC.errors?.['minlength']">
+              <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+            </span>
+          </span>
+        </div>
+    </div>
+
+    </div>
+
+        <div class="form-columns flex flex-row gap-2">
+
+
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                <label htmlFor="certificatScolarite">Certificat de scolarite</label>
+                <input  type="file" id="certificatScolarite" name="certificatScolarite" accept="image/*"
+                       required  />
+
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                <label htmlFor="documentAffiliationPCA">Document affiliation Personne en charge</label>
+                <input type="file" id="documentAffiliationPCA" name="documentAffiliationPCA"
+                       required />
+
+            </div>
+        </div>
+
+        </div>
+
+        </form>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Annuler" icon="pi pi-times" (click)="onHidenDialogue()" class="p-button-danger mr-2 mb-2"></button>
+        <button pButton pRipple ttype="submit" [disabled]="!myForm.valid"  label="Enregistrer" icon="pi pi-save" (click)="onSave(personneAcharge)"
+                class="p-button-success mr-2 mb-2"></button>
+    </ng-template>
+</p-dialog>
+
+
+
+
+
+
+

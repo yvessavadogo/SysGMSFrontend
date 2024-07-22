@@ -1,0 +1,385 @@
+<style>
+    .horizontal-buttons {
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+
+<p-table
+#dt1
+    [value]="mutualistes"
+    [paginator]="true"
+    [rows]="10"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    [globalFilterFields]="['code', 'annee', 'isActived']" responsiveLayout="scroll">
+
+    <ng-template pTemplate="caption">
+        <div class="flex justify-content-between flex-column sm:flex-row">
+            <div>
+                <button pButton pRipple type="button" label="Ajouter un mutualiste" icon="pi pi-plus" (click)="onDisplayDialogue(mutualiste)"  class="p-button-info mr-2 mb-2"></button>
+            </div>
+            <span class="p-input-icon-left mb-2">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" #filter (input)="dt1.filterGlobal($event.target, 'contains')" placeholder="Recherche" class="w-full"/>
+            </span>
+        </div>
+    </ng-template>
+
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:25%">Nom</th>
+            <th style="width:25%">dateNaiss</th>
+            <th style="width:25%">Genre</th>
+            <th style="width:25%">Status</th>
+            <th style="width:25%">Action</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-mutualiste>
+        <tr>
+            <td>{{ mutualiste.nomAssure }}</td>
+            <td>{{ mutualiste.prenomAssure }}</td>
+            <td>{{ mutualiste.sexeAssure }}</td>
+            <td>{{ mutualiste.statutAssure}}</td>
+
+          <div class="horizontal-buttons">
+
+              <button pButton pRipple type="button" (click)="onAddPersonneCharge(mutualiste)" icon="pi pi-user" class="p-button mr-2"></button>
+              <button pButton pRipple type="button" (click)="getPersonneAchargeByMutualiste(mutualiste)" icon="pi pi-info-circle"  class="p-button-info mr-2"></button>
+              <button pButton pRipple type="button" (click)="onDisplayDialogue(mutualiste)" icon="pi pi-pencil" class="p-button-success mr-2"></button>
+              <button pButton pRipple type="button" icon="pi pi-trash" (click)="onDeleteMutualiste(mutualiste)" class="p-button-danger mr-2"></button>
+
+
+          </div>
+
+
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog header="ENREGISTREMENT D'UN MUTUALISTE" [(visible)]="displayDialogue" [style]="{width: '70vw'}">
+    <div>
+        <form  #myForm="ngForm" name="myForm" role="form" novalidate>
+            <div class="form-columns flex flex-row gap-2">
+
+                <div class="form-column flex-grow-1">
+                    <div class="flex flex-column gap-2">
+                    <label htmlFor="nom">Nom</label>
+                    <input pInputText id="nom" type="text" name="nom" [(ngModel)]="mutualiste.nomAssure" #nom="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : nom.touched && !nom.valid}"
+                    />
+                    <span *ngIf="nom.invalid && (nom.dirty || nom.touched)">
+                <span *ngIf="nom.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="nom.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+
+              <label htmlFor="prenom">Prénom </label>
+              <input pInputText id="prenom" type="text" name="prenom" [(ngModel)]="mutualiste.prenomAssure" #prenom="ngModel"
+                     required minlength="1"
+                     [ngClass] ="{'ng-invalid ng-dirty' : prenom.touched && !prenom.valid}"/>
+              <span *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)">
+          <span *ngIf="prenom.errors?.['required']">
+            <small class="ng-invalid ng-dirty">Le code est requis</small>
+          </span>
+          <span *ngIf="prenom.errors?.['minlength']">
+            <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+          </span>
+        </span>
+    </div>
+</div>
+</div>
+
+
+
+<div class="form-columns flex flex-row gap-2">
+
+    <div class="form-column flex-grow-1">
+        <div class="flex flex-column gap-2">
+                    <label htmlFor="dateNaiss">Date de Naissance </label>
+                    <input pInputText id="dateNaiss" type="text" name="dateNaiss" [(ngModel)]="mutualiste.dateNaissanceAssure" #dateNaiss="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : dateNaiss.touched && !dateNaiss.valid}"
+                    />
+                    <span *ngIf="dateNaiss.invalid && (dateNaiss.dirty || dateNaiss.touched)">
+                <span *ngIf="dateNaiss.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="dateNaiss.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                    <label htmlFor="sexe">Sexe</label>
+                    <input pInputText id="sexe" type="text" name="sexe" [(ngModel)]="mutualiste.sexeAssure" #sexe="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : sexe.touched && !sexe.valid}"
+                    />
+                    <span *ngIf="sexe.invalid && (sexe.dirty || sexe.touched)">
+                <span *ngIf="sexe.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="sexe.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+                </div>
+
+
+<div class="form-columns flex flex-row gap-2">
+
+    <div class="form-column flex-grow-1">
+        <div class="flex flex-column gap-2">
+                    <label htmlFor="tel">Telephone</label>
+                    <input pInputText id="tel" type="text" name="tel" [(ngModel)]="mutualiste.telephoneAssure" #tel="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : tel.touched && !tel.valid}"
+                    />
+                    <span *ngIf="tel.invalid && (tel.dirty || tel.touched)">
+                <span *ngIf="tel.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="tel.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+                </div>
+            </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                    <label htmlFor="adress">Adresse</label>
+                    <input pInputText id="adress" type="text" name="adress" [(ngModel)]="mutualiste.adresseAssure" #adress="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : adress.touched && !adress.valid}"
+                    />
+                    <span *ngIf="adress.invalid && (adress.dirty || adress.touched)">
+                <span *ngIf="adress.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="adress.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+        </div>
+
+
+
+        <div class="form-columns flex flex-row gap-2">
+
+            <div class="form-column flex-grow-1">
+                <div class="flex flex-column gap-2">
+                    <label htmlFor="Status">Statut</label>
+                    <input pInputText id="Status" type="text" name="Status" [(ngModel)]="mutualiste.statutAssure" #Status="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : Status.touched && !Status.valid}"
+                    />
+                    <span *ngIf="Status.invalid && (Status.dirty || Status.touched)">
+                <span *ngIf="Status.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="Status.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                <label htmlFor="depensesSante">Depenses santé</label>
+                <input pInputText id="depensesSante" type="text" name="depensesSante" [(ngModel)]="mutualiste.depensesSante" #depensesSante="ngModel"
+                       required minlength="1"
+                       [ngClass] ="{'ng-invalid ng-dirty' : depensesSante.touched && !depensesSante.valid}"
+                />
+                <span *ngIf="depensesSante.invalid && (depensesSante.dirty || depensesSante.touched)">
+            <span *ngIf="depensesSante.errors?.['required']">
+              <small class="ng-invalid ng-dirty">Le code est requis</small>
+            </span>
+            <span *ngIf="depensesSante.errors?.['minlength']">
+              <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+            </span>
+          </span>
+        </div>
+    </div>
+
+    </div>
+
+    <div class="form-columns flex flex-row gap-2">
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                    <label htmlFor="matriculeMutualiste">Matricule</label>
+                    <input pInputText id="matriculeMutualiste" type="text" name="matriculeMutualiste" [(ngModel)]="mutualiste.matriculeMutualiste" #matriculeMutualiste="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : matriculeMutualiste.touched && !matriculeMutualiste.valid}"
+                    />
+                    <span *ngIf="matriculeMutualiste.invalid && (matriculeMutualiste.dirty || matriculeMutualiste.touched)">
+                <span *ngIf="matriculeMutualiste.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="matriculeMutualiste.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                    <label htmlFor="categorieMutualiste">categorie</label>
+                    <input pInputText id="categorieMutualiste" type="text" name="categorieMutualiste" [(ngModel)]="mutualiste.categorieMutualiste" #categorieMutualiste="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : categorieMutualiste.touched && !categorieMutualiste.valid}"
+                    />
+                    <span *ngIf="categorieMutualiste.invalid && (categorieMutualiste.dirty || categorieMutualiste.touched)">
+                <span *ngIf="categorieMutualiste.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="categorieMutualiste.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-columns flex flex-row gap-2">
+
+            <div class="form-column flex-grow-1">
+                <div class="flex flex-column gap-2">
+                    <label htmlFor="serviceMutualiste">Service</label>
+                    <input pInputText id="serviceMutualiste" type="text" name="serviceMutualiste" [(ngModel)]="mutualiste.serviceMutualiste" #serviceMutualiste="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : serviceMutualiste.touched && !serviceMutualiste.valid}"
+                    />
+                    <span *ngIf="serviceMutualiste.invalid && (serviceMutualiste.dirty || serviceMutualiste.touched)">
+                <span *ngIf="serviceMutualiste.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="serviceMutualiste.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                    <label htmlFor="fonctionMutualiste">Fonction</label>
+                    <input pInputText id="fonctionMutualiste" type="text" name="fonctionMutualiste" [(ngModel)]="mutualiste.fonctionMutualiste" #fonctionMutualiste="ngModel"
+                           required minlength="1"
+                           [ngClass] ="{'ng-invalid ng-dirty' : fonctionMutualiste.touched && !fonctionMutualiste.valid}"
+                    />
+                    <span *ngIf="fonctionMutualiste.invalid && (fonctionMutualiste.dirty || fonctionMutualiste.touched)">
+                <span *ngIf="fonctionMutualiste.errors?.['required']">
+                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                </span>
+                <span *ngIf="fonctionMutualiste.errors?.['minlength']">
+                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
+                </span>
+              </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-columns flex flex-row gap-2">
+
+
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                <label htmlFor="photo">Photo</label>
+                <input  type="file" id="photo" name="photo" (change)="onFileSelected($event)" accept="image/*"
+                       required  />
+
+            </div>
+        </div>
+
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                <label htmlFor="documentMutualiste">Document mutualiste</label>
+                <input type="file" id="documentMutualiste" name="documentMutualiste" (change)="onFileSelected($event)"
+                       required />
+
+            </div>
+        </div>
+
+        </div>
+
+
+
+        </form>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Annuler" icon="pi pi-times" (click)="onHidenDialogue()" class="p-button-danger mr-2 mb-2"></button>
+        <button pButton pRipple ttype="submit" [disabled]="!myForm.valid"  label="Enregistrer" icon="pi pi-save" (click)="onSave(mutualiste)"
+                class="p-button-success mr-2 mb-2"></button>
+    </ng-template>
+</p-dialog>
+
+
+
+<div *ngIf="personnesAChargeByMutualiste" class="mt-4 d-flex justify-content-center">
+    <h5> la listes des personnes en charge du mutualiste: {{mutualiste.nomAssure}} </h5>
+    <p-table
+    #dt1
+        [value]="personnesAChargeByMutualiste"
+        [paginator]="true"
+        [rows]="10"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [globalFilterFields]="['code', 'annee', 'isActived']" responsiveLayout="scroll">
+
+        <ng-template pTemplate="caption">
+
+        </ng-template>
+
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:25%">Nom</th>
+                <th style="width:25%">dateNaiss</th>
+                <th style="width:25%">Genre</th>
+                <th style="width:25%">Status</th>
+                <th style="width:25%">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-personneAcharge>
+            <tr>
+                <td>{{ personneAcharge.nomAssure }}</td>
+                <td>{{ personneAcharge.prenomAssure }}</td>
+                <td>{{ personneAcharge.sexeAssure }}</td>
+                <td>{{ personneAcharge.statutAssure}}</td>
+
+              <div class="horizontal-buttons">
+
+                  <button pButton pRipple type="button"  icon="pi pi-pencil" class="p-button-success mr-2"></button>
+                  <button pButton pRipple type="button" icon="pi pi-trash"  class="p-button-danger mr-2"></button>
+
+              </div>
+
+
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
