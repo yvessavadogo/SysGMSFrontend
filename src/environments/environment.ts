@@ -6,5 +6,5 @@
 export const environment = {
   production: false,
   //api : 'http://192.168.56.101/api/',
-  api : 'http://192.168.1.2/api/',
+  api : 'http://192.168.1.3/api/',
 };
