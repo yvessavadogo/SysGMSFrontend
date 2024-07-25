@@ -30,18 +30,31 @@
     <ng-template pTemplate="header">
         <tr>
             <th style="width:25%">Nom</th>
-            <th style="width:25%">dateNaiss</th>
-            <th style="width:25%">Genre</th>
+            <th style="width:25%">Prenom</th>
+            <th style="width:25%">Date de naissance</th>
+            <th style="width:25%">Nombre de PAC</th>
             <th style="width:25%">Status</th>
             <th style="width:25%">Action</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-mutualiste>
+
+
         <tr>
             <td>{{ mutualiste.nomAssure }}</td>
             <td>{{ mutualiste.prenomAssure }}</td>
-            <td>{{ mutualiste.sexeAssure }}</td>
-            <td>{{ mutualiste.statutAssure}}</td>
+            <td>{{ mutualiste.dateNaissanceAssure }}</td>
+            <td>{{ mutualiste.personnes_a_charge }}</td>
+
+            <td [ngStyle]="{
+                'border-bottom': mutualiste.statutAssure === 1 ? '2px solid green' : '2px solid red',
+                'padding': '5px'
+              }">
+                {{ mutualiste.statutAssure === 1 ? 'Active' : 'Désactivé' }}
+              </td>
+
+
+
 
           <div class="horizontal-buttons">
 
@@ -106,39 +119,46 @@
 
     <div class="form-column flex-grow-1">
         <div class="flex flex-column gap-2">
-                    <label htmlFor="dateNaiss">Date de Naissance </label>
-                    <input pInputText id="dateNaiss" type="text" name="dateNaiss" [(ngModel)]="mutualiste.dateNaissanceAssure" #dateNaiss="ngModel"
-                           required minlength="1"
-                           [ngClass] ="{'ng-invalid ng-dirty' : dateNaiss.touched && !dateNaiss.valid}"
-                    />
-                    <span *ngIf="dateNaiss.invalid && (dateNaiss.dirty || dateNaiss.touched)">
+            <label for="dateNaiss">Date de Naissance</label>
+            <input id="dateNaiss" type="date" name="dateNaiss" [(ngModel)]="mutualiste.dateNaissanceAssure" #dateNaiss="ngModel"
+                   required
+                   [ngClass]="{'ng-invalid ng-dirty': dateNaiss.touched && !dateNaiss.valid}"
+            />
+            <span *ngIf="dateNaiss.invalid && (dateNaiss.dirty || dateNaiss.touched)">
                 <span *ngIf="dateNaiss.errors?.['required']">
-                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                    <small class="ng-invalid ng-dirty">La date de naissance est requise</small>
                 </span>
-                <span *ngIf="dateNaiss.errors?.['minlength']">
-                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
-                </span>
-              </span>
-            </div>
+            </span>
         </div>
+        <!-- Afficher la date au format YYYY-MM-DD avec des tirets -->
+        <div *ngIf="mutualiste.dateNaissanceAssure">
+            <p>Date de Naissance : {{ mutualiste.dateNaissanceAssure | date:'yyyy-MM-dd' }}</p>
+        </div>
+    </div>
+
+
 
         <div class="form-column flex-grow-1">
             <div class="flex flex-column gap-2">
-                    <label htmlFor="sexe">Sexe</label>
-                    <input pInputText id="sexe" type="text" name="sexe" [(ngModel)]="mutualiste.sexeAssure" #sexe="ngModel"
-                           required minlength="1"
-                           [ngClass] ="{'ng-invalid ng-dirty' : sexe.touched && !sexe.valid}"
-                    />
-                    <span *ngIf="sexe.invalid && (sexe.dirty || sexe.touched)">
-                <span *ngIf="sexe.errors?.['required']">
-                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+                <label for="sexe">Sexe</label>
+                <select id="sexe" name="sexe" [(ngModel)]="mutualiste.sexeAssure" #sexe="ngModel"
+                        required
+                        [ngClass]="{'ng-invalid ng-dirty': sexe.touched && !sexe.valid}"
+                        style="width: 100%; padding: 0.5rem; font-size: 1rem;">
+                    <option value="" disabled selected>Choisir...</option>
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                </select>
+                <span *ngIf="sexe.invalid && (sexe.dirty || sexe.touched)">
+                    <span *ngIf="sexe.errors?.['required']">
+                        <small class="ng-invalid ng-dirty">Le sexe est requis</small>
+                    </span>
                 </span>
-                <span *ngIf="sexe.errors?.['minlength']">
-                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
-                </span>
-              </span>
             </div>
         </div>
+
+
+
                 </div>
 
 
@@ -185,23 +205,25 @@
 
         <div class="form-columns flex flex-row gap-2">
 
-            <div class="form-column flex-grow-1">
-                <div class="flex flex-column gap-2">
-                    <label htmlFor="Status">Statut</label>
-                    <input pInputText id="Status" type="text" name="Status" [(ngModel)]="mutualiste.statutAssure" #Status="ngModel"
-                           required minlength="1"
-                           [ngClass] ="{'ng-invalid ng-dirty' : Status.touched && !Status.valid}"
-                    />
-                    <span *ngIf="Status.invalid && (Status.dirty || Status.touched)">
-                <span *ngIf="Status.errors?.['required']">
-                  <small class="ng-invalid ng-dirty">Le code est requis</small>
+        <div class="form-column flex-grow-1">
+            <div class="flex flex-column gap-2">
+                <label for="Status">Status</label>
+                <select id="Status" name="sexe" [(ngModel)]="mutualiste.statutAssure" #Status="ngModel"
+                        required
+                        [ngClass]="{'ng-invalid ng-dirty': Status.touched && !Status.valid}"
+                        style="width: 100%; padding: 0.5rem; font-size: 1rem;">
+                    <option value="" disabled selected>Choisir...</option>
+                    <option value="1">Activé</option>
+                    <option value="0">Désactive</option>
+                </select>
+                <span *ngIf="Status.invalid && (Status.dirty || Status.touched)">
+                    <span *ngIf="Status.errors?.['required']">
+                        <small class="ng-invalid ng-dirty">Le Status est requis</small>
+                    </span>
                 </span>
-                <span *ngIf="Status.errors?.['minlength']">
-                  <small class="form-text ng-invalid ng-dirty">Entrez au minimum 1 caractère</small>
-                </span>
-              </span>
             </div>
         </div>
+
 
         <div class="form-column flex-grow-1">
             <div class="flex flex-column gap-2">

@@ -6,7 +6,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import {ConfirmationService, MessageService} from "primeng/api";
 import { Table } from 'primeng/table';
-import { mockMutualistes } from '../mockup/mockmutualiste';
+
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { AddPersonneAchargeComponent } from '../personne-acharge/add-personne-acharge/add-personne-acharge.component';
@@ -113,6 +113,8 @@ onSave(mutualiste : IMutualiste): void {
       }
     );
   }
+
+  this.displayDialogue=false;
 }
 
 onHidenDialogue() :void{
